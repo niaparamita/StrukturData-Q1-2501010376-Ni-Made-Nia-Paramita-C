@@ -1,31 +1,61 @@
 # StrukturData-Q1-2501010376-Ni-Made-Nia-Paramita-C
 
 jawaban:
-1. Karena Akses Array memiliki kecepatan  sangat cepat ($O(1)$) karena sifat memorinya yang terprediksi/sudah ditentukan, sehingga cukup satu kali hitung untuk sampai ke tujuan. Sedangkan Linked List membutuhkan waktu $O(n)$ karena memorinya bersifat dinamis dan tidak terprediksi, karena itu sistem harus menelusuri rantai data.
-2. Masalah Array: Jika memori memiliki banyak celah kecil (fragmentasi), sistem mungkin gagal mengalokasikan Array yang besar meskipun total memori bebas mencukupi. Selain itu, jika Array penuh, harus melakukan resizing (membuat array baru yang lebih besar dan menyalin semua data lama), yang sangat mahal secara komputasi.
+Berikut adalah penjelasan komprehensif mengenai struktur data dasar dan analisis efisiensinya:
 
-Keunggulan Linked List: Karena bersifat non-kontinu, Linked List dapat memanfaatkan celah-celah memori yang tersebar. Ia tumbuh secara dinamis selama masih ada sisa memori di sistem.
+---
 
-Alasan Teoritis: Alokasi memori dinamis memungkinkan penggunaan ruang yang lebih efisien tanpa perlu memesan blok besar di muka.
+## 1. Karakteristik Memori dan Akses Data
 
-3. Array adalah pilihan terbaik untuk kecepatan akses data secara acak karena alamat memorinya kontinu dan dapat dihitung langsung ($O(1)$), namun sangat lambat dan kaku untuk manipulasi (tambah/hapus) di tengah karena harus menggeser elemen lain.Singly Linked List unggul dalam fleksibilitas manipulasi data secara dinamis pada memori yang non-kontinu, namun memiliki akses data yang lambat ($O(n)$) karena harus menelusuri rantai pointer satu arah dari awal.Doubly Linked List menawarkan fleksibilitas navigasi maksimal (bisa maju dan mundur) serta mempermudah operasi penghapusan, tetapi harus dibayar dengan penggunaan memori yang lebih boros karena adanya pointer tambahan (Prev) pada setiap node.
+Perbedaan kecepatan akses antara Array dan Singly Linked List ditentukan oleh cara data diletakkan di RAM.
 
-4. Perbedaan Teoritis Utama
-Singly/Doubly Linked List: Node terakhir (Tail) menunjuk ke NULL. Ini menandakan akhir dari daftar, sehingga iterasi akan berhenti saat mencapai nilai kosong tersebut.
+* **Array (Memori Kontinu):** Elemen disimpan dalam blok memori yang berurutan. Karena setiap elemen memiliki ukuran yang sama, komputer dapat menghitung lokasi elemen ke-$i$ secara instan menggunakan rumus: $\text{Alamat}_i = \text{Alamat Dasar} + (i \times \text{Ukuran})$. Inilah mengapa aksesnya **$O(1)$**.
+* **Singly Linked List (Memori Non-Kontinu):** Elemen (node) tersebar secara acak. Satu-satunya cara mengetahui lokasi elemen berikutnya adalah dengan membaca *pointer* pada elemen saat ini. Untuk mencapai elemen ke-$n$, Anda harus melewati $n-1$ elemen sebelumnya. Inilah mengapa aksesnya **$O(n)$**.
 
-Circular Linked List: Node terakhir tidak menunjuk ke NULL, melainkan menunjuk kembali ke Node Pertama (Head). Hal ini menciptakan sebuah lingkaran (loop) tanpa akhir yang memungkinkan sistem terus berputar melalui elemen-elemennya tanpa perlu melakukan reset manual ke posisi awal.
-contoh: Skenario paling efektif untuk struktur ini adalah Penjadwalan CPU (Round Robin Scheduling) pada Sistem Operasi.
 
-Alasan Efektifitas:
-Dalam penjadwalan Round Robin, sistem operasi memberikan jatah waktu (time quantum) yang sama kepada setiap proses yang sedang berjalan.
 
-OS menaruh semua proses dalam sebuah Circular Linked List.
+---
 
-CPU mengeksekusi proses A, lalu pindah ke proses B, lalu C.
+## 2. Analisis Efisiensi Operasi Manipulasi
 
-Setelah proses terakhir selesai mendapatkan jatah waktunya, CPU secara otomatis kembali ke proses A karena pointer terakhir merujuk kembali ke awal.
+Linked List lebih unggul daripada Array dalam kondisi **sering terjadi penyisipan atau penghapusan di awal atau tengah data**.
 
-Struktur melingkar ini memastikan bahwa tidak ada proses yang terlewat dan siklus pembagian sumber daya berjalan terus-menerus dengan overhead manajemen yang minimal.
+* **Alasan Teoritis:** * Pada **Array**, penyisipan di awal memaksa setiap elemen lainnya bergeser satu posisi ke kanan (**Element Shifting**) yang memakan waktu $O(n)$.
+    * Pada **Linked List**, Anda hanya perlu mengubah arah *pointer* pada node terkait tanpa harus memindahkan data lainnya secara fisik. Proses penyambungan kembali ini hanya memakan waktu **$O(1)$** (setelah lokasi ditemukan).
 
-5.
-Alokasi Baru: Python memesan blok memori baru yang lebih besar (biasanya sekitar $1.125\times$ ukuran lama) di lokasi lain.Penyalinan (Copying): Semua elemen dari array lama disalin ke array baru satu per satu.Penyisipan: Elemen baru yang di-append dimasukkan ke slot kosong pertama di memori baru.Penghapusan: Blok memori lama dihancurkan (dealokasi).Intinya: Meskipun proses penyalinan memakan waktu $O(n)$, hal ini jarang terjadi karena Python melebihkan kapasitas (over-allocation), sehingga secara rata-rata (Amortized), operasi append tetap dianggap $O(1)$.
+---
+
+## 3. Konsep Doubly Linked List
+
+**Anatomi Node:**
+Sebuah node pada Doubly Linked List (DLL) memiliki tiga komponen: **Data**, **Pointer Next** (ke depan), dan **Pointer Prev** (ke belakang).
+
+
+
+* **Dampak Memori:** Penggunaan memori meningkat signifikan karena setiap node harus menyimpan dua alamat memori (pointer) alih-alih satu. Pada sistem 64-bit, ini menambah beban sekitar 8 byte per node dibandingkan Singly Linked List.
+* **Fleksibilitas:** DLL memungkinkan penelusuran **dua arah** (maju dan mundur). Hal ini mempermudah operasi seperti penghapusan node tertentu karena kita bisa langsung mengetahui node sebelumnya tanpa harus mengulang pencarian dari awal daftar.
+
+---
+
+## 4. Mekanisme Circular Linked List
+
+**Perbedaan Teoritis:**
+Pada Linked List biasa, node terakhir menunjuk ke `NULL` (akhir daftar). Pada **Circular Linked List**, node terakhir menunjuk kembali ke **node pertama (Head)**, sehingga membentuk lingkaran tanpa ujung.
+
+* **Skenario Penggunaan (Use Case):** **Penjadwalan CPU Round Robin**.
+    * Sistem operasi memberikan jatah waktu pada setiap aplikasi secara bergantian. Dengan struktur melingkar, setelah aplikasi terakhir selesai mendapatkan giliran, CPU secara otomatis kembali ke aplikasi pertama dalam siklus tanpa perlu logika reset yang rumit.
+
+
+
+---
+
+## 5. Array Dinamis di Python (List)
+
+Ketika sebuah Python List (Dynamic Array) kehabisan kapasitas saat melakukan `.append()`, terjadi mekanisme otomatis berikut:
+
+1.  **Over-allocation:** Python memesan blok memori baru yang lebih besar (biasanya $\approx 1.125\times$ dari ukuran lama).
+2.  **Copying:** Semua elemen dari memori lama disalin ke blok memori yang baru.
+3.  **Update:** Pointer list diarahkan ke memori baru, dan memori lama dihapus.
+
+**Analisis Kompleksitas:**
+Meskipun proses menyalin data memakan waktu $O(n)$, hal ini jarang terjadi karena kapasitas dilebihkan. Oleh karena itu, biaya operasi `append` secara rata-rata dianggap **Amortized $O(1)$**.
